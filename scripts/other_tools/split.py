@@ -9,12 +9,12 @@ def update_xml_for_tile(original_xml_path, image_width, image_height, tile_coord
     tree = ET.parse(original_xml_path)
     root = tree.getroot()
 
-    # Update image dimensions in the XML
+    #Update image dimensions in the XML
     size_node = root.find('size')
     size_node.find('width').text = str(tile_coords[2] - tile_coords[0])  # tile_width
     size_node.find('height').text = str(tile_coords[3] - tile_coords[1]) # tile_height
 
-    # Filter and adjust bounding box annotations
+    #Filter/adjust bounding box annotations
     for obj in root.findall('object'):
         bbox = obj.find('bndbox')
         xmin = int(bbox.find('xmin').text)
@@ -22,19 +22,19 @@ def update_xml_for_tile(original_xml_path, image_width, image_height, tile_coord
         xmax = int(bbox.find('xmax').text)
         ymax = int(bbox.find('ymax').text)
 
-        # Check if the object is within the current tile
+        #Check if object within the current tile
         if xmin < tile_coords[2] and xmax > tile_coords[0] and ymin < tile_coords[3] and ymax > tile_coords[1]:
-            # Adjust coordinates relative to the tile's top-left corner
-            bbox.find('xmin').text = str(max(0, xmin - tile_coords[0]))
-            bbox.find('ymin').text = str(max(0, ymin - tile_coords[1]))
-            bbox.find('xmax').text = str(str(min(tile_coords[2] - tile_coords[0], xmax - tile_coords[0])))
-            bbox.find('ymax').text = str(str(min(tile_coords[3] - tile_coords[1], ymax - tile_coords[1])))
+            #Adjust coordinates relative to the tile's top-left corner
+            bbox.find('xmin').text = str(max(0, xmin - tile_coords[0])) #if part of object goes off left side, cut that portion out
+            bbox.find('ymin').text = str(max(0, ymin - tile_coords[1])) #if part of object goes above top side, cut that portion out
+            bbox.find('xmax').text = str(str(min(tile_coords[2] - tile_coords[0], xmax - tile_coords[0]))) #if part of object goes off right side, cut that portion out
+            bbox.find('ymax').text = str(str(min(tile_coords[3] - tile_coords[1], ymax - tile_coords[1]))) #if part of object goes under bottom side, cut that portion out
         else:
-            # Remove objects outside the current tile
+            #Remove objects outside current tile
             root.remove(obj)
 
-    for element in root.iter('filename'): # Iterate through elements with the tag 'filename'  # Replace "old" with "new" in the filename
-        element.text = tile_name  # Update the text of the element
+    for element in root.iter('filename'): #Iterate through elements with the tag 'filename'
+        element.text = tile_name  #Update the text of the element
 
     tree.write(output_xml_path)
 
@@ -67,17 +67,16 @@ def split_image(image_path, output_dir, xml_path):
             output_xml_path = os.path.join(output_dir, output_xml)
             update_xml_for_tile(xml_path, width, height, tile_coords, output_xml_path, tile_name)
 
-directory_path = "/Users/willamrice/Desktop/Run_3_2/" #current images
-output_path = "/Users/willamrice/Desktop/Run_3_2_Split/" #split images
-for (root,dirs,files) in os.walk(directory_path): #for each letter
-    for dir in dirs: #current letter
-        print(dir)
-        cur_dir = directory_path + dir #full path of dir
-        cur_out = output_path + dir #full path for where to put
-        for filename in os.listdir(cur_dir): #for an files in current letter
-            if filename.lower().endswith('.jpg'):
+directory_path = "your/path/to/original/images/" #path to images
+output_path = "your/new/path/to/split/images/" #path to split images
+for (root,dirs,files) in os.walk(directory_path): #for each image directory
+    for dir in dirs: #current directory
+        cur_dir = directory_path + dir #full path of current directory
+        cur_out = output_path + dir #full path for where to save split image
+        for filename in os.listdir(cur_dir): #for all image/xml files in current directory
+            if filename.lower().endswith('.jpg'): #if an image
                 full_image = os.path.join(cur_dir, filename) #full image path
-                xml_name = filename[:-4] + '.xml'
+                xml_name = filename[:-4] + '.xml' #associated xml file
                 full_xml = os.path.join(cur_dir, xml_name)
                 split_image(full_image, cur_out, full_xml) #split procedure
 
