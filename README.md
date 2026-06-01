@@ -1,7 +1,8 @@
 The following is a set of instructions for a Tensorflow Object Detection program. This mostly assumes you are using Unix (Windows just means you will have to use different command syntax). Code in red indicates it will be variable to your personal computer, and the words are metaphorical instructions for what you actually need. 
 
-CONFIGURING YOUR ENVIRONMENT
-1. Creating a virtual environment
+# Tensorflow Object Detection
+## CONFIGURING YOUR ENVIRONMENT
+### 1. Creating a virtual environment
 Firstly, you will want to create a conda virtual environment to contain all your specific packages and their versions, to prevent crossover into your other projects. Download and install conda whenever and however; there are plenty of tutorials. 
 
 Then, paste this into terminal:
@@ -10,18 +11,18 @@ Then, paste this into terminal:
 This creates the VE. You may activate with each session via:
 > conda activate tensorflow
 
-2. Installing Tensorflow
+### 2. Installing Tensorflow
 Inside this environment, you will want to download Tensorflow itself. This can be done via the following command:
 > pip install --ignore-installed --upgrade tensorflow==2.13.1
 
 You may verify this worked via:
 > python -c "import tensorflow as tf;print(tf.reduce_sum(tf.random.normal([1000, 1000])))"
 
-3. Download TF Object Detection API
+### 3. Download TF Object Detection API
 These folders and files basically provide you an accessible human interface for leveraging Tensorflow’s programs for Object Detection, with pre-built code and all. 
 Firstly, you will want to create a new folder named Tensorflow. cd into this directory. Download the Tensorflow Model Repository as a ZIP, and extract its contents here. You can alternatively clone it via Github if you’re a nerd. 
 
-4. Protobuf Installation/Complication
+### 4. Protobuf Installation/Complication
 This package helps Tensorflow Object Detection API configure model/training parameters. Whatever that means, it’s important enough to make you deal with compiling it. 
 Basically, go here and download whichever ZIP/tar matches your OS.
 Then, extract the contents of the ZIP/tar in whatever directory you want. Again, you can clone Github alternatively.
@@ -33,27 +34,27 @@ Next, add the PATH to these extracted contents to your Path environment. How to 
 Once this is set, cd into Tensorflow/models/research and then paste this:
 > for /f %i in ('dir /b object_detection\protos\*.proto') do protoc object_detection\protos\%i --python_out=.
 
-5. COCO API installation
+### 5. COCO API installation
 Download cocoapi as ZIP to whatever directory you want and extract its contents (Github clone alternately). Then run the following:
 > cd cocoapi/PythonAPI
 > make
 > cp -r pycocotools full/path/to/this/folder/TensorFlow/models/research/
 
-6. Install Object Detection API
+### 6. Install Object Detection API
 Go in Tensorflow/models/research and paste this code:
 > cp object_detection/packages/tf2/setup.py .
 > python -m pip install .
 
-7. Test Installation
+### 7. Test Installation
 To make sure Tensorflow and Object Detection API work and play nicely, see if it passes these tests. 
 Within Tensorflow/models/research,
 > python object_detection/builders/model_builder_tf2_test.py
 
 It will tell you if something went wrong.
 
-TRAINING/RUNNING A DETECTION MODEL
+## TRAINING/RUNNING A DETECTION MODEL
 Now that everything is installed properly, it is time to actually 
-1. Workspace Preparation
+### 1. Workspace Preparation
 Create a new folder entitled workspace under Tensorflow. Then, under workspace, create a folder training_demo. This will be where you train a particular model. Under Tensorflow/workspace/training_demo/, you should create the following other folders:
 	•	/annotations/ : This will store the *.record files
 	•	/exported-models/ : Finished model will be stored here, for export
@@ -61,7 +62,7 @@ Create a new folder entitled workspace under Tensorflow. Then, under workspace, 
 	•	/models/ : Will contain subfolders of each model trained upon
 	•	/pre-trained-models/ : Where the downloaded, pre-trained-models will be stored
 
-2. Dataset Preparation
+### 2. Dataset Preparation
 First, you will need to install labelImg to annotate the dataset. Here’s the simplest way:
 > pip install labelImg
 > labelImg /path/to/images [class file]
@@ -71,7 +72,7 @@ Then, comes annotation. In terminal,
 
 Information about how to further utilize labelImg can be found here. This will create xml files alongside your images to store annotation information. 
 
-3. Dataset Partition
+### 3. Dataset Partition
 Once you have all your images annotated, you are going to want to split them into training and testing sets for the model. The standard ratio is 80:20 for training:testing; however, if your dataset is large enough, you may want to do 90:10 to maximize training. 
 
 While this may be done manually, pre-built code helps this go faster. 
@@ -82,7 +83,7 @@ cd into proprocessing and run:
 
 This divides your image set into train and test, with an 80:20 split. This only copies the images into these directories; you’ll have to delete the originals.
 
-4. Create Label Map
+### 4. Create Label Map
 Tensorflow requires a file to map label names onto integer values. This should be in .pbtxt format (e.g. label.pbtxt), creatable via any text editor. The file should be in this format:
 
 item {
@@ -97,7 +98,7 @@ item {
 
 Stick this in the annotations folder.
 
-5. Create Records
+### 5. Create Records
 We need to convert all the xml files in images into a TFRecord format. There is pre-built code for this, to be saved in scripts/preprocessing. 
 Firstly, install the package pandas via conda or pip.
 Then, go into preprocessing and run:
@@ -110,7 +111,7 @@ Then, go into preprocessing and run:
 
 This will create train.record and test.record files in the annotations folder. 
 
-6. Get a pre-trained model
+### 6. Get a pre-trained model
 Now that the workspace is properly set-up and all necessary files exist, it is time to start the training. First, you will need to acquire some pre-trained model from Tensorflow 2 Detection Model Zoo. You can get the statistics of and information about each model to determine which one may work the best for your dataset. Once you downloaded the *.tar.gz of the pre-trained model, open the *.tar folder and extract its contents into training_demo/pre-trained-models. 
 
 Now that you have the pre-trained model saved, copy this folder into models and name it after the pretrained model (e.g. copy training_demo/pre-trained-models/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8 into models, rename it my_ssd_resnet50_v1_fpn.
@@ -306,27 +307,27 @@ In this new folder in models, make a few changes to its pipeline.config. Note th
 187  }
 188}
 
-7. Train the Model
+### 7. Train the Model
 From Tensorflow/models/research/object_detection/model_main_tf2.py, copy the model_main_tf2.py script into training_demo.
 Then run the following:
 > python model_main_tf2.py --model_dir=models/your_model_folder --pipeline_config_path=models/your_model_folder/pipeline.config
 
 This initiates model training. It can take a day or up to a week; it’s strongly recommended you do not try to run this on a local computer, but rather look for an HPC system you can use. 
 
-8. Evaluate the Model
+### 8. Evaluate the Model
 You’ll want to check how the model training is doing. Inside training_demo, run the following command:
 > python model_main_tf2.py --model_dir=models/your_model_folder --pipeline_config_path=models/your_model_folder/pipeline.config --checkpoint_dir=models/your_model_folder
 
 This will spit out evaluation metrics based on the most recent checkpoint.
 
-9. Export the Model
+### 9. Export the Model
 Once the model is trained to your liking, you’ll want to prep it for export. Copy the TensorFlow/models/research/object_detection/exporter_main_v2.py script into the training_demo folder. Then, run the following command in training_demo:
 
 > python exporter_main_v2.py --input_type image_tensor --pipeline_config_path models/your_model_folder/pipeline.config --trained_checkpoint_dir models/your_model_folder/ --output_directory exported-models/my_model
 
 This saved model, under my_model, can then be used for interference. 
 
-10. Using the Model for Interference
+### 10. Using the Model for Interference
 In the GitHub repository, I’ve saved a Jupyter notebook entitled Run_and_Crop.ipynb under testspace. This can be followed and adapted for your specific purposes based on the comments. Here are come quick things to configure your environment:
 	•	Under Tensorflow/testspace/images, you can insert a local set of images you want to run object detection on
 	•	You need to move your exported model folder (my_model) and a copy of label_map.pbtxt into testspace to perform interference
@@ -334,20 +335,20 @@ In the GitHub repository, I’ve saved a Jupyter notebook entitled Run_and_Crop.
 	•	Code that is highlighted out is optional. Some of it is just annoying on a large-scale detection operation; e.g showing each cropped image
 
 
-TRAINING/RUNNING AN IMAGE CLASSIFICATION MODEL
+# Tensorflow Image Classification
 In the GitHub repository, I’ve saved a Jupyter notebook entitled Image_Classification.ipynb under testspace. Here are some basic instructions; the code itself will take you most of the way.
-1. Configure Your Environment
+### 1. Configure Your Environment
 For my image classification code, I have it set as Tensorflow version 2.15.0. This is different from the Object Detection; you will need a separate virtual environment. 
 
-2. Dataset Preparation
+### 2. Dataset Preparation
 Under testspace/classification_images, create folders entitled under each sorting category you want. e.g, testspace/classification_images/class_1, testspace/classification_images/class_2. You will fill these folders with training images relevant to each category. 
 
 The code will take you through splitting the dataset into training/validation and normalizing it.
 
-3. Training the Model
+### 3. Training the Model
 While the code takes you through training and saving the model, note that there are several other pre-trained-models you made find under Tensorflow, and it also has tutorials on building a model from scratch. My specific model may not be best for your data. 
 
-4. Evaluating the Model
+### 4. Evaluating the Model
 A classification matrix is utilized to help you visualize the results of your model, You are looking for a solid dark blue diagonal. 
 
 The rest of the code has to do with deploying the image classification model; create directories as needed for showing your output.     
