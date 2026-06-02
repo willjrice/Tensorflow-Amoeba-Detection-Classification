@@ -1,4 +1,4 @@
-The following is a set of instructions for a Tensorflow Object Detection and Image Classification program. This mostly assumes you are using Unix (Windows just means you will have to use different command syntax). Code in bold indicates it will be variable to your personal computer, and the words are metaphorical instructions for what you actually need. 
+The following is a set of instructions for a Tensorflow Object Detection and Image Classification program. This mostly assumes you are using Unix (Windows just means you will have to use different command syntax). Code in __bold__ indicates it will be variable to your personal computer, and the words are metaphorical instructions for what you actually need. 
 
 # Tensorflow Object Detection
 ## CONFIGURING YOUR ENVIRONMENT
@@ -6,7 +6,10 @@ The following is a set of instructions for a Tensorflow Object Detection and Ima
 Firstly, you will want to create a conda virtual environment to contain all your specific packages and their versions, to prevent crossover into your other projects. Download and install conda whenever and however; there are plenty of tutorials. 
 
 Then, paste this into terminal:
-> conda create -n tensorflow pip python=3.10.18
+
+```
+conda create -n tensorflow pip python=3.10.18
+```
 
 This creates the VE. You may activate with each session via:
 > conda activate tensorflow
