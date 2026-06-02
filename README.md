@@ -1,4 +1,4 @@
-The following is a set of instructions for a Tensorflow Object Detection and Image Classification program. This mostly assumes you are using Unix (Windows just means you will have to use different command syntax). Code in __bold__ indicates it will be variable to your personal computer, and the words are metaphorical instructions for what you actually need. 
+The following is a set of instructions for a Tensorflow Object Detection and Image Classification program. This mostly assumes you are using Unix (Windows just means you will have to use different command syntax). Code in {brackets} indicates it will be variable to your personal computer, and the words are metaphorical instructions for what you actually need. 
 
 # Tensorflow Object Detection
 ## CONFIGURING YOUR ENVIRONMENT
