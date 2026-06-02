@@ -87,8 +87,8 @@ This divides your image set into train and test, with an 80:20 split. This only 
 Tensorflow requires a file to map label names onto integer values. This should be in .pbtxt format (e.g. label.pbtxt), creatable via any text editor. The file should be in this format:
 
 > item {\
->        id: 1		#integer value\
->        name: ‘class1’	#class label\
+> / / / / / / /       id: 1		#integer value\
+> / / / / / / /       name: ‘class1’	#class label\
 > }\
 > \
 > item {\
