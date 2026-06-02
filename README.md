@@ -30,8 +30,8 @@ Next, add the PATH to these extracted contents to your Path environment. How to 
 	a. Open your hidden configuration file: 
 	    > nano ~/.tcshrc
 	b. Paste this at the end of it: 
-	    > set path = ( $path /full/path/to/your/protoc/folder/bin )
-Once this is set, cd into Tensorflow/models/research and then paste this:
+	    > set path = ( $path /full/path/to/your/protoc/bin )
+Once this is set, cd into _Tensorflow/models/research_ and then paste this:
 > for /f %i in ('dir /b object_detection\protos\*.proto') do protoc object_detection\protos\%i --python_out=.
 
 ### 5. COCO API installation
@@ -41,26 +41,26 @@ Download cocoapi as ZIP to whatever directory you want and extract its contents 
 > cp -r pycocotools full/path/to/this/folder/TensorFlow/models/research/
 
 ### 6. Install Object Detection API
-Go in Tensorflow/models/research and paste this code:
+Go in _Tensorflow/models/research_ and paste this code:
 > cp object_detection/packages/tf2/setup.py .
 > python -m pip install .
 
 ### 7. Test Installation
 To make sure Tensorflow and Object Detection API work and play nicely, see if it passes these tests. 
-Within Tensorflow/models/research,
+Within _Tensorflow/models/research_,
 > python object_detection/builders/model_builder_tf2_test.py
 
 It will tell you if something went wrong.
 
 ## TRAINING/RUNNING A DETECTION MODEL
-Now that everything is installed properly, it is time to actually 
+Now that everything is installed properly, it is time to actually train a model.
 ### 1. Workspace Preparation
-Create a new folder entitled workspace under Tensorflow. Then, under workspace, create a folder training_demo. This will be where you train a particular model. Under Tensorflow/workspace/training_demo/, you should create the following other folders:
-	•	/annotations/ : This will store the *.record files
-	•	/exported-models/ : Finished model will be stored here, for export
-	•	/images/: Set of images for training/testing, with *.xml files
-	•	/models/ : Will contain subfolders of each model trained upon
-	•	/pre-trained-models/ : Where the downloaded, pre-trained-models will be stored
+Create a new folder entitled _workspace_ under Tensorflow. Then, under _workspace_, create a folder _training_demo_. This will be where you train a particular model. Under _Tensorflow/workspace/training_demo/_, you should create the following other folders:
+- /annotations/ : This will store the *.record files
+- /exported-models/ : Finished model will be stored here, for export
+- /images/: Set of images for training/testing, with *.xml files
+- /models/ : Will contain subfolders of each model trained upon
+- /pre-trained-models/ : Where the downloaded, pre-trained-models will be stored
 
 ### 2. Dataset Preparation
 First, you will need to install labelImg to annotate the dataset. Here’s the simplest way:
@@ -73,10 +73,10 @@ Then, comes annotation. In terminal,
 Information about how to further utilize labelImg can be found here. This will create xml files alongside your images to store annotation information. 
 
 ### 3. Dataset Partition
-Once you have all your images annotated, you are going to want to split them into training and testing sets for the model. The standard ratio is 80:20 for training:testing; however, if your dataset is large enough, you may want to do 90:10 to maximize training. 
+Once you have all your images annotated, you are going to want to split them into training and testing sets for the model. The standard ratio is 80:20 for training:testing; however, if your dataset is large enough, you may want to do 90:10 to maximize training data. 
 
 While this may be done manually, pre-built code helps this go faster. 
-Create the following directory: Tensorflow/scripts/preprocessing
+Create the following directory: _Tensorflow/scripts/preprocessing_
 And put this file in it.
 cd into proprocessing and run:
 > python partition_dataset.py -x -i /path/to/Tensorflow/workspace/training_demo/images -r 0.2
@@ -112,9 +112,9 @@ Then, go into preprocessing and run:
 This will create train.record and test.record files in the annotations folder. 
 
 ### 6. Get a pre-trained model
-Now that the workspace is properly set-up and all necessary files exist, it is time to start the training. First, you will need to acquire some pre-trained model from Tensorflow 2 Detection Model Zoo. You can get the statistics of and information about each model to determine which one may work the best for your dataset. Once you downloaded the *.tar.gz of the pre-trained model, open the *.tar folder and extract its contents into training_demo/pre-trained-models. 
+Now that the workspace is properly set-up and all necessary files exist, it is time to start the training. First, you will need to acquire some pre-trained model from Tensorflow 2 Detection Model Zoo. You can get the statistics of and information about each model to determine which one may work the best for your dataset. Once you downloaded the *.tar.gz of the pre-trained model, open the *.tar folder and extract its contents into _training_demo/pre-trained-models_. 
 
-Now that you have the pre-trained model saved, copy this folder into models and name it after the pretrained model (e.g. copy training_demo/pre-trained-models/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8 into models, rename it my_ssd_resnet50_v1_fpn.
+Now that you have the pre-trained model saved, copy this folder into models and name it after the pretrained model (e.g. copy _training_demo/pre-trained-models/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8_ into models, rename it my_ssd_resnet50_v1_fpn.)
 
 In this new folder in models, make a few changes to its pipeline.config. Note this will look different for each pre-trained model; these are just the basic changes:
 
@@ -308,7 +308,7 @@ In this new folder in models, make a few changes to its pipeline.config. Note th
 188}
 
 ### 7. Train the Model
-From Tensorflow/models/research/object_detection/model_main_tf2.py, copy the model_main_tf2.py script into training_demo.
+From _Tensorflow/models/research/object_detection/model_main_tf2.py_, copy the model_main_tf2.py script into training_demo.
 Then run the following:
 > python model_main_tf2.py --model_dir=models/your_model_folder --pipeline_config_path=models/your_model_folder/pipeline.config
 
@@ -321,7 +321,7 @@ You’ll want to check how the model training is doing. Inside training_demo, ru
 This will spit out evaluation metrics based on the most recent checkpoint.
 
 ### 9. Export the Model
-Once the model is trained to your liking, you’ll want to prep it for export. Copy the TensorFlow/models/research/object_detection/exporter_main_v2.py script into the training_demo folder. Then, run the following command in training_demo:
+Once the model is trained to your liking, you’ll want to prep it for export. Copy the _TensorFlow/models/research/object_detection/exporter_main_v2.py_ script into the training_demo folder. Then, run the following command in training_demo:
 
 > python exporter_main_v2.py --input_type image_tensor --pipeline_config_path models/your_model_folder/pipeline.config --trained_checkpoint_dir models/your_model_folder/ --output_directory exported-models/my_model
 
@@ -329,10 +329,10 @@ This saved model, under my_model, can then be used for interference.
 
 ### 10. Using the Model for Interference
 In the GitHub repository, I’ve saved a Jupyter notebook entitled Run_and_Crop.ipynb under testspace. This can be followed and adapted for your specific purposes based on the comments. Here are come quick things to configure your environment:
-	•	Under Tensorflow/testspace/images, you can insert a local set of images you want to run object detection on
-	•	You need to move your exported model folder (my_model) and a copy of label_map.pbtxt into testspace to perform interference
-	•	My code saves images of the individual detected objects, not a copy of the image with detections
-	•	Code that is highlighted out is optional. Some of it is just annoying on a large-scale detection operation; e.g showing each cropped image
+- Under _Tensorflow/testspace/images_, you can insert a local set of images you want to run object detection on
+- You need to move your exported model folder (my_model) and a copy of label_map.pbtxt into testspace to perform interference
+- My code saves images of the individual detected objects, not a copy of the image with detections
+- Code that is highlighted out is optional. Some of it is just annoying on a large-scale detection operation; e.g showing each cropped image
 
 
 # Tensorflow Image Classification
@@ -341,7 +341,7 @@ In the GitHub repository, I’ve saved a Jupyter notebook entitled Image_Classif
 For my image classification code, I have it set as Tensorflow version 2.15.0. This is different from the Object Detection; you will need a separate virtual environment. 
 
 ### 2. Dataset Preparation
-Under testspace/classification_images, create folders entitled under each sorting category you want. e.g, testspace/classification_images/class_1, testspace/classification_images/class_2. You will fill these folders with training images relevant to each category. 
+Under _testspace/classification_images_, create folders entitled under each sorting category you want. e.g, _testspace/classification_images/class_1_, _testspace/classification_images/class_2_. You will fill these folders with training images relevant to each category. 
 
 The code will take you through splitting the dataset into training/validation and normalizing it.
 
