@@ -1,4 +1,4 @@
-The following is a set of instructions for a Tensorflow Object Detection program. This mostly assumes you are using Unix (Windows just means you will have to use different command syntax). Code in red indicates it will be variable to your personal computer, and the words are metaphorical instructions for what you actually need. 
+The following is a set of instructions for a Tensorflow Object Detection and Image Classification program. This mostly assumes you are using Unix (Windows just means you will have to use different command syntax). Code in bold indicates it will be variable to your personal computer, and the words are metaphorical instructions for what you actually need. 
 
 # Tensorflow Object Detection
 ## CONFIGURING YOUR ENVIRONMENT
@@ -19,8 +19,8 @@ You may verify this worked via:
 > python -c "import tensorflow as tf;print(tf.reduce_sum(tf.random.normal([1000, 1000])))"
 
 ### 3. Download TF Object Detection API
-These folders and files basically provide you an accessible human interface for leveraging Tensorflow’s programs for Object Detection, with pre-built code and all. 
-Firstly, you will want to create a new folder named Tensorflow. cd into this directory. Download the Tensorflow Model Repository as a ZIP, and extract its contents here. You can alternatively clone it via Github if you’re a nerd. 
+These folders and files basically provide you an accessible human interface for leveraging Tensorflow’s programs, with pre-built code and all. 
+Firstly, you will want to create a new folder named _Tensorflow_. __cd__ into this directory. Download the Tensorflow Model Repository (https://github.com/tensorflow/models/archive/master.zip) as a __ZIP__, and extract its contents here. You can alternatively clone it via Github if you’re a nerd. 
 
 ### 4. Protobuf Installation/Complication
 This package helps Tensorflow Object Detection API configure model/training parameters. Whatever that means, it’s important enough to make you deal with compiling it. 
