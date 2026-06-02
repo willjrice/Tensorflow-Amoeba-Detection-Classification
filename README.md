@@ -121,10 +121,9 @@ Now that you have the pre-trained model saved, copy this folder into models and 
 In this new folder in models, make a few changes to its pipeline.config. Note this will look different for each pre-trained model; these are just the basic changes:
 
 ```
-
   1 model {
   2  ssd {
-  3    num_classes: 1 # Set this to the number of different label classes
+  3    __num_classes: 1 # Set this to the number of different label classes__
   4    image_resizer {
   5      fixed_shape_resizer {
   6        height: 640
@@ -298,11 +297,11 @@ In this new folder in models, make a few changes to its pipeline.config. Note th
 174    input_path: "path/to/Tensorflow/workspace/training_demo/annotations/train.record" # Path to training TFRecord file
 175  }
 176}
-177eval_config {
+177 eval_config {
 178  metrics_set: "coco_detection_metrics"
 179  use_moving_averages: false
 180}
-181eval_input_reader {
+181 eval_input_reader {
 182  label_map_path: "path/to/Tensorflow/workspace/training_demo/annotations/label_map.pbtxt" # Path to label map file
 183  shuffle: false
 184  num_epochs: 1
