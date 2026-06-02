@@ -120,10 +120,10 @@ Now that you have the pre-trained model saved, copy this folder into models and 
 
 In this new folder in models, make a few changes to its pipeline.config. Note this will look different for each pre-trained model; these are just the basic changes:
 
-```
+```ruby
   1 model {
   2  ssd {
-  3    __num_classes: 1 # Set this to the number of different label classes__
+  3    num_classes: 1 # Set this to the number of different label classes
   4    image_resizer {
   5      fixed_shape_resizer {
   6        height: 640
