@@ -20,7 +20,7 @@ You may verify this worked via:
 
 ### 3. Download TF Object Detection API
 These folders and files basically provide you an accessible human interface for leveraging Tensorflow’s programs, with pre-built code and all. 
-Firstly, you will want to create a new folder named _Tensorflow_. __cd__ into this directory. Download the Tensorflow Model Repository (https://github.com/tensorflow/models/archive/master.zip) as a __ZIP__, and extract its contents here. You can alternatively clone it via Github if you’re a nerd. 
+Firstly, you will want to create a new folder named _Tensorflow_. __cd__ into this directory. Download the [Tensorflow Model Repository] (https://github.com/tensorflow/models/archive/master.zip) as a __ZIP__, and extract its contents here. You can alternatively clone it via Github if you’re a nerd. 
 
 ### 4. Protobuf Installation/Complication
 This package helps Tensorflow Object Detection API configure model/training parameters. Whatever that means, it’s important enough to make you deal with compiling it. 
