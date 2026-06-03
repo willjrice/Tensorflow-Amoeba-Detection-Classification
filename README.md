@@ -32,7 +32,8 @@ python -c "import tensorflow as tf;print(tf.reduce_sum(tf.random.normal([1000, 1
 
 ### 3. Download TF Object Detection API
 These folders and files basically provide you an accessible human interface for leveraging Tensorflow’s programs, with pre-built code and all. 
-Firstly, you will want to create a new folder named _Tensorflow_. __cd__ into this directory. Download the [Tensorflow Model Repository](https://github.com/tensorflow/models/archive/master.zip) as a ZIP, and extract its contents here. You can alternatively clone it via Github if you’re a nerd. 
+
+Firstly, you will want to create a new folder named _Tensorflow_. _cd_ into this directory. Download the [Tensorflow Model Repository](https://github.com/tensorflow/models/archive/master.zip) as a ZIP, and extract its contents here. You can alternatively clone it via Github if you’re a nerd. 
 
 ### 4. Protobuf Installation/Complication
 This package helps Tensorflow Object Detection API configure model/training parameters. Whatever that means, it’s important enough to make you deal with compiling it. 
@@ -41,12 +42,13 @@ Basically, go [here](https://github.com/protocolbuffers/protobuf/releases/tag/v2
 
 Then, extract the contents of the ZIP/tar in whatever directory you want. Again, you can clone Github alternatively.
 
-Next, add the PATH to these extracted contents to your Path environment. How to do this based on your OS, but works like this in Unix tsch:
+Next, add the PATH to these extracted contents to your Path environment. How to do this varies based on your OS, but works like this in Unix tsch:
+
 1. Open your hidden configuration file in terminal:
 ```
 nano ~/.tcshrc
 ```
-2. Paste this at the end of it:
+2. Paste this at the very bottom of it and save:
 ```
 set path = ( $path /FULL/PATH/TO/YOUR/PROTOC/bin )
 ```
@@ -61,7 +63,7 @@ Download [cocoapi](https://github.com/cocodataset/cocoapi) as ZIP and extract it
 ```
 cd cocoapi/PythonAPI
 make
-cp -r pycocotools full/path/to/this/folder/TensorFlow/models/research/
+cp -r pycocotools PATH/TO/TensorFlow/models/research/
 ```
 
 ### 6. Install Object Detection API
@@ -100,7 +102,10 @@ labelImg
 ```
 
 Then, comes annotation. In terminal,
-> labelImg PATH/TO/Tensorflow/workspace/training_demo/images
+
+```
+labelImg PATH/TO/Tensorflow/workspace/training_demo/images
+```
 
 Information about how to further utilize labelImg can be found [here](https://github.com/HumanSignal/labelImg#usage). This will create xml files alongside your images to store annotation information. 
 
@@ -137,15 +142,20 @@ Stick this in the _annotations_ folder.
 
 ### 5. Create Records
 We need to convert all the xml files in images into a TFRecord format. There is [pre-built code](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/_downloads/da4babe668a8afb093cc7776d7e630f3/generate_tfrecord.py) for this, to be saved in _scripts/preprocessing_. 
-Firstly, install the package __pandas__ via conda or pip.
+Firstly, install the package __pandas__ via conda or pip:
+
+```
+conda install pandas
+```
+
 Then, go into _preprocessing_  and run:
 
 ```
 #Training TFRecord
-python generate_tfrecord.py -x path/to/Tensorflow/workspace/training_demo/images/train -l path/to/Tensorflow/workspace/training_demo/annotations/label_map.pbtxt -o path/to/Tensorflow/workspace/training_demo/train.record
+python generate_tfrecord.py -x PATH/TO/Tensorflow/workspace/training_demo/images/train -l PATH/TO/Tensorflow/workspace/training_demo/annotations/label_map.pbtxt -o PATH/TO/Tensorflow/workspace/training_demo/train.record
 
 #Testing TFRecord
-python generate_tfrecord.py -x path/to/Tensorflow/workspace/training_demo/images/test -l path/to/Tensorflow/workspace/training_demo/annotations/label_map.pbtxt -o path/to/Tensorflow/workspace/training_demo/test.record
+python generate_tfrecord.py -x PATH/TO/Tensorflow/workspace/training_demo/images/test -l PATH/TO/Tensorflow/workspace/training_demo/annotations/label_map.pbtxt -o PATH/TO/Tensorflow/workspace/training_demo/test.record
 ```
 
 This will create _train.record_ and _test.record_ files in the _annotations_ folder. 
@@ -356,7 +366,7 @@ Then run the following:
 python model_main_tf2.py --model_dir=models/YOUR_MODEL --pipeline_config_path=models/YOUR_MODEL/pipeline.config
 ```
 
-This initiates model training. It can take a day or up to a week; it’s strongly recommended you do not try to run this on a local computer for more advanced models, but rather look for an HPC system you can use
+This initiates model training. It can take a day or up to a week; it’s strongly recommended you do not try to run this on a local computer for more advanced models, but rather look for an HPC system 
 
 ### 8. Evaluate the Model
 You’ll want to check how the model training is doing. Inside _training_demo_, run the following command:
@@ -379,13 +389,13 @@ This saved model (MY_MODEL) can then be used for interference.
 ### 10. Using the Model for Interference
 In the GitHub repository, I’ve saved a Jupyter notebook entitled _Run_and_Crop.ipynb_ under _testspace_. This can be followed and adapted for your specific purposes based on the comments. Here are come quick things to configure your environment:
 - Under _Tensorflow/testspace/images_, you can insert a local set of images you want to run object detection on
-- You need to move your exported model folder (MY_MODEL) and a copy of _label_map.pbtxt_ into _testspace_ to perform interference
+- You need to move your exported model folder (MY_MODEL) and a copy of your _label_map.pbtxt_ into _testspace_ to perform interference
 - My code saves images of the individual detected objects, not a copy of the image with detections
 - Code that is highlighted out is optional. Some of it is just annoying on a large-scale detection operation; e.g showing each cropped image
 
 
 # Tensorflow Image Classification
-In the GitHub repository, I’ve saved a Jupyter notebook entitled _Image_Classification.ipynb_ under testspace. Here are some basic instructions; the code itself will take you most of the way.
+In the GitHub repository, I’ve saved a Jupyter notebook entitled _Image_Classification.ipynb_ under _testspace_. Here are some basic instructions; the code itself will take you most of the way.
 ### 1. Configure Your Environment
 For my image classification code, I have it set as Tensorflow version 2.15.0. This is different from the Object Detection; you will need a separate virtual environment. 
 
